@@ -125,6 +125,7 @@
         const soundEl = document.createElement('a-sound');
         soundEl.setAttribute('src', card.sound);
         soundEl.setAttribute('data-index', index);
+        soundEl.setAttribute('on', 'sound-ended', 'onSoundEnded');
         cardEl.appendChild(soundEl);
 
         // Append elements to the scene
