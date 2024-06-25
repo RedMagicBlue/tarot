@@ -163,7 +163,7 @@
     function scaleCard(index) {
       const cardEl = document.querySelectorAll('a-entity')[index];
       const soundEl = cardEl.querySelector('a-sound');
-      
+
       console.log('Scaling card:', index); // Debugging log
       cardEl.setAttribute('animation__scaleup', {
         property: 'scale',
@@ -201,7 +201,7 @@
     };
   </script>
 
-<a-scene particle-system="preset: snow; particleCount: 15000; color:black, red; rotationAxis:y; positionSpread:0 1000 0; velocityValue: 0 5 0" loading-screen="dotsColor: red; backgroundColor: black" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true" antialias="true">
+  <a-scene particle-system="preset: snow; particleCount: 15000; color:black, red; rotationAxis:y; positionSpread:0 1000 0; velocityValue: 0 5 0" loading-screen="dotsColor: red; backgroundColor: black" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true" antialias="true">
 
 
     <a-camera position="0 -20 200" look-controls="pointerLockEnabled:true;" animation="property: position; to: 0 -0.7 2;  easing: linear; dur: 5000">
