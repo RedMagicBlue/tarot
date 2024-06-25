@@ -117,7 +117,8 @@
         frontEl.setAttribute('width', '1');
         frontEl.setAttribute('height', '2');
         frontEl.setAttribute('src', card.texture);
-        frontEl.setAttribute('material', 'side: double; shader: flat; visible: false');
+        frontEl.setAttribute('material', 'side: double; shader: flat');
+        frontEl.setAttribute('visible', 'false');
         frontEl.setAttribute('data-index', index);
 
         // Create the sound entity
@@ -143,6 +144,8 @@
       const fronts = document.querySelectorAll('.card-front');
       const sounds = document.querySelectorAll('a-sound');
 
+      console.log('Flipping card:', index); // Debugging log
+
       backs[index].setAttribute('visible', 'false');
       fronts[index].setAttribute('visible', 'true');
 
@@ -158,6 +161,7 @@
     // Function to scale the card to full screen
     function scaleCard(index) {
       const cardEl = document.querySelectorAll('a-entity')[index];
+      console.log('Scaling card:', index); // Debugging log
       cardEl.setAttribute('animation__scaleup', {
         property: 'scale',
         to: '3 3 3',
