@@ -158,9 +158,11 @@
       sounds[index].components.sound.playSound();
     }
 
-    // Function to scale the card to full screen
+    // Function to scale the card to full screen and back
     function scaleCard(index) {
       const cardEl = document.querySelectorAll('a-entity')[index];
+      const soundEl = cardEl.querySelector('a-sound');
+      
       console.log('Scaling card:', index); // Debugging log
       cardEl.setAttribute('animation__scaleup', {
         property: 'scale',
@@ -172,6 +174,24 @@
         to: '0 1.6 -4',
         dur: 500
       });
+
+      // Add event listener to scale back when the sound ends
+      soundEl.addEventListener('sound-ended', () => {
+        console.log('Sound ended for card:', index); // Debugging log
+        cardEl.setAttribute('animation__scaledown', {
+          property: 'scale',
+          to: '1 1 1',
+          dur: 500
+        });
+        cardEl.setAttribute('animation__movedown', {
+          property: 'position',
+          to: `${index % 3 * 1.5 - 1.5} ${1.5 - Math.floor(index / 3) * 2.25} -4`,
+          dur: 500
+        });
+      });
+
+      // Ensure the sound plays
+      soundEl.components.sound.playSound();
     }
 
     // Wait for A-Frame to load, then create card elements
