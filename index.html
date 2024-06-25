@@ -17,7 +17,7 @@
 </head>
 <body>
   <script>
-    // Define the 48 tarot cards with relative textures and sounds
+    // Define the 48 tarot cards with unique textures and sounds
     const tarotDeck = [
       { texture: './images/1.jpg', sound: './assets/effect1.m4a' },
       { texture: './images/1bn.jpg', sound: './assets/effect1.m4a' },
@@ -161,15 +161,23 @@
     // Function to scale the card to full screen
     function scaleCard(index) {
       const cardEl = document.querySelectorAll('a-entity')[index];
+      console.log('Scaling card:', index); // Debugging log
       cardEl.setAttribute('animation__scaleup', {
         property: 'scale',
         to: '3 3 3',
         dur: 500
       });
+      cardEl.setAttribute('animation__moveup', {
+        property: 'position',
+        to: '0 1.6 -4',
+        dur: 500
+      });
     }
 
-    // Initialize the game
-    createCardElements(pickedCards);
+    // Wait for A-Frame to load, then create card elements
+    window.onload = () => {
+      createCardElements(pickedCards);
+    };
   </script>
 
 <a-scene particle-system="preset: snow; particleCount: 15000; color:black, red; rotationAxis:y; positionSpread:0 1000 0; velocityValue: 0 5 0" loading-screen="dotsColor: red; backgroundColor: black" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true" antialias="true">
