@@ -132,8 +132,9 @@
         cardEl.appendChild(frontEl);
         sceneEl.appendChild(cardEl);
 
-        // Add event listener for click to flip the card
+        // Add event listener for click to flip the card and scale up
         backEl.addEventListener('click', () => flipCard(index));
+        frontEl.addEventListener('click', () => scaleCard(index));
       });
     }
 
@@ -142,6 +143,8 @@
       const backs = document.querySelectorAll('.card-back');
       const fronts = document.querySelectorAll('.card-front');
       const sounds = document.querySelectorAll('a-sound');
+
+      console.log('Flipping card:', index); // Debugging log
 
       backs[index].setAttribute('visible', 'false');
       fronts[index].setAttribute('visible', 'true');
@@ -155,6 +158,22 @@
       sounds[index].components.sound.playSound();
     }
 
+    // Function to scale the card to full screen
+    function scaleCard(index) {
+      const cardEl = document.querySelectorAll('a-entity')[index];
+      console.log('Scaling card:', index); // Debugging log
+      cardEl.setAttribute('animation__scaleup', {
+        property: 'scale',
+        to: '3 3 3',
+        dur: 500
+      });
+      cardEl.setAttribute('animation__moveup', {
+        property: 'position',
+        to: '0 1.6 -4',
+        dur: 500
+      });
+    }
+
     // Wait for A-Frame to load, then create card elements
     window.onload = () => {
       createCardElements(pickedCards);
@@ -163,7 +182,8 @@
 
 <a-scene particle-system="preset: snow; particleCount: 15000; color:black, red; rotationAxis:y; positionSpread:0 1000 0; velocityValue: 0 5 0" loading-screen="dotsColor: red; backgroundColor: black" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true" antialias="true">
 
-  <a-camera position="0 -20 200" look-controls="pointerLockEnabled:true;" animation="property: position; to: 0 -0.7 0;  easing: linear; dur: 5000">
+
+    <a-camera position="0 -20 200" look-controls="pointerLockEnabled:true;" animation="property: position; to: 0 -0.7 0;  easing: linear; dur: 5000">
       <a-entity 
         cursor="fuse: true; fuseTimeout: 1000"
         raycaster="objects: .gui-interactable"
@@ -174,7 +194,7 @@
           hover-color="red"
           active-color="red"
           design="ring"
-	      fuse="true" fuse-timeout="1000">
+	      fuse="false" fuse-timeout="1000">
         </a-gui-cursor>
       </a-entity>
     </a-camera>
