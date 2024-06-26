@@ -86,6 +86,7 @@
 
     // Variable to track the currently playing sound
     let currentlyPlayingSound = null;
+    let isSoundPlaying = false;
 
     // Function to create card elements in A-Frame
     function createCardElements(cards) {
@@ -152,14 +153,15 @@
       backs[index].setAttribute('visible', 'false');
       fronts[index].setAttribute('visible', 'true');
 
-      // Stop the currently playing sound if any
-      if (currentlyPlayingSound !== null) {
-        currentlyPlayingSound.components.sound.stopSound();
+      // Play the sound for the clicked card only if no sound is currently playing
+      if (!isSoundPlaying) {
+        isSoundPlaying = true;
+        currentlyPlayingSound = sounds[index];
+        currentlyPlayingSound.components.sound.playSound();
+        currentlyPlayingSound.addEventListener('sound-ended', () => {
+          isSoundPlaying = false;
+        });
       }
-
-      // Play the sound for the clicked card
-      currentlyPlayingSound = sounds[index];
-      currentlyPlayingSound.components.sound.playSound();
     }
 
     // Function to scale the card to full screen
