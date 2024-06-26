@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>48 Card Tarot Game</title>
+  <script src="assets/engine.js"></script>
+  <script src="assets/event.js"></script>
+  <script src="assets/gui.js"></script>
+  <script src="assets/sound.js"></script>
+  <script src="assets/audio.js"></script>
+  <script src="assets/particles.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Define the 48 tarot cards with unique textures and sounds
+    const tarotDeck = [
+      { texture: './images/1.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/1bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/2.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/2bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/3.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/3bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/4.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/4bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/5.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/5bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/6.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/6bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/7.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/7bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/8.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/8bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/9.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/9bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/10.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/10bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/11.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/11bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/12.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/12bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/13.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/13bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/14.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/14bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/15.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/15bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/16.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/16bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/17.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/17bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/18.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/18bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/19.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/19bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/20.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/20bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/21.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/21bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/22.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/22bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/23.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/23bn.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/24.jpg', sound: './assets/effect1.m4a' },
+      { texture: './images/24bn.jpg', sound: './assets/effect1.m4a' }
+    ];
+
+    // Function to shuffle the deck and pick 3 cards
+    function shuffleAndPick(deck, num) {
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+      return deck.slice(0, num);
+    }
+
+    // Pick 3 random cards
+    const pickedCards = shuffleAndPick(tarotDeck, 3);
+
+    // Card back texture
+    const cardBackTexture = './images/back.jpg';  // Placeholder for card back image
+
+    // Function to create card elements in A-Frame
+    function createCardElements(cards) {
+      const sceneEl = document.querySelector('a-scene');
+
+      cards.forEach((card, index) => {
+        const cardEl = document.createElement('a-entity');
+        const row = Math.floor(index / 3);
+        const col = index % 3;
+
+        // Create the card back
+        const backEl = document.createElement('a-plane');
+        backEl.setAttribute('class', 'card-back gui-interactable');
+        backEl.setAttribute('position', `${col * 1.5 - 1.5} ${1.5 - row * 2.25} -4`);
+        backEl.setAttribute('width', '1');
+        backEl.setAttribute('height', '2');
+        backEl.setAttribute('src', cardBackTexture);
+        backEl.setAttribute('material', 'side: double; shader: flat');
+        backEl.setAttribute('data-index', index);
+        backEl.setAttribute('opacity', '0');
+        backEl.setAttribute('animation__fadein', {
+          property: 'opacity',
+          to: '1',
+          dur: 1000,
+          delay: index * 500
+        });
+
+        // Create the card front
+        const frontEl = document.createElement('a-plane');
+        frontEl.setAttribute('class', 'card-front gui-interactable');
+        frontEl.setAttribute('position', `${col * 1.5 - 1.5} ${1.5 - row * 2.25} -4`);
+        frontEl.setAttribute('width', '1');
+        frontEl.setAttribute('height', '2');
+        frontEl.setAttribute('src', card.texture);
+        frontEl.setAttribute('material', 'side: double; shader: flat');
+        frontEl.setAttribute('visible', 'false');
+        frontEl.setAttribute('data-index', index);
+
+        // Create the sound entity
+        const soundEl = document.createElement('a-sound');
+        soundEl.setAttribute('src', card.sound);
+        soundEl.setAttribute('data-index', index);
+        cardEl.appendChild(soundEl);
+
+        // Append elements to the scene
+        cardEl.appendChild(backEl);
+        cardEl.appendChild(frontEl);
+        sceneEl.appendChild(cardEl);
+
+        // Add event listener for click to flip the card
+        backEl.addEventListener('click', () => flipCard(index));
+      });
+    }
+
+    // Function to flip the card
+    function flipCard(index) {
+      const backs = document.querySelectorAll('.card-back');
+      const fronts = document.querySelectorAll('.card-front');
+      const sounds = document.querySelectorAll('a-sound');
+
+      backs[index].setAttribute('visible', 'false');
+      fronts[index].setAttribute('visible', 'true');
+
+      // Stop all sounds
+      sounds.forEach(sound => {
+        sound.components.sound.stopSound();
+      });
+
+      // Play the sound for the clicked card
+      sounds[index].components.sound.playSound();
+    }
+
+    // Wait for A-Frame to load, then create card elements
+    window.onload = () => {
+      createCardElements(pickedCards);
+    };
+  </script>
+
+<a-scene particle-system="preset: snow; particleCount: 15000; color:black, red; rotationAxis:y; positionSpread:0 1000 0; velocityValue: 0 5 0" loading-screen="dotsColor: red; backgroundColor: black" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true" antialias="true">
+  <a-camera position="0 -20 200" look-controls="pointerLockEnabled:true;" animation="property: position; to: 0 1.5 -2; easing: linear; dur: 5000">
+    <a-entity 
+      cursor="fuse: true; fuseTimeout: 1000"
+      raycaster="objects: .gui-interactable"
+      position="0 0 -1" scale="3 3 3">
+      <a-gui-cursor 
+        id="cursor"
+        color="white"
+        hover-color="red"
+        active-color="red"
+        design="ring"
+        fuse="true" fuse-timeout="1000">
+      </a-gui-cursor>
+    </a-entity>
+  </a-camera>
+
+  <a-sky color="#000"></a-sky>
+</a-scene>
+</body>
+</html>
