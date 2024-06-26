@@ -84,6 +84,9 @@
     // Card back texture
     const cardBackTexture = './images/back.jpg';  // Placeholder for card back image
 
+    // Variable to track the currently playing sound
+    let currentlyPlayingSound = null;
+
     // Function to create card elements in A-Frame
     function createCardElements(cards) {
       const sceneEl = document.querySelector('a-scene');
@@ -149,13 +152,14 @@
       backs[index].setAttribute('visible', 'false');
       fronts[index].setAttribute('visible', 'true');
 
-      // Stop all sounds
-      sounds.forEach(sound => {
-        sound.components.sound.stopSound();
-      });
+      // Stop the currently playing sound if any
+      if (currentlyPlayingSound !== null) {
+        currentlyPlayingSound.components.sound.stopSound();
+      }
 
       // Play the sound for the clicked card
-      sounds[index].components.sound.playSound();
+      currentlyPlayingSound = sounds[index];
+      currentlyPlayingSound.components.sound.playSound();
     }
 
     // Function to scale the card to full screen
