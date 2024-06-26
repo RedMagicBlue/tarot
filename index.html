@@ -84,7 +84,8 @@
     // Card back texture
     const cardBackTexture = './images/back.jpg';  // Placeholder for card back image
 
-    // Variable to track the currently playing sound
+    // Track audio state
+    let isSoundPlaying = false;
     let currentlyPlayingSound = null;
 
     // Function to create card elements in A-Frame
@@ -128,6 +129,8 @@
         const soundEl = document.createElement('a-sound');
         soundEl.setAttribute('src', card.sound);
         soundEl.setAttribute('data-index', index);
+        soundEl.setAttribute('autoplay', 'false'); // Ensure autoplay is false
+        soundEl.setAttribute('on', 'sound-ended: handleSoundEnded'); // Add listener for sound-ended
         cardEl.appendChild(soundEl);
 
         // Append elements to the scene
@@ -152,14 +155,23 @@
       backs[index].setAttribute('visible', 'false');
       fronts[index].setAttribute('visible', 'true');
 
-      // Stop the currently playing sound if any
-      if (currentlyPlayingSound !== null) {
+      if (isSoundPlaying) {
+        console.log('Sound is already playing, stopping current sound.');
         currentlyPlayingSound.components.sound.stopSound();
       }
 
       // Play the sound for the clicked card
+      console.log('Playing sound for card:', index);
       currentlyPlayingSound = sounds[index];
       currentlyPlayingSound.components.sound.playSound();
+      isSoundPlaying = true;
+    }
+
+    // Function to handle when a sound ends
+    function handleSoundEnded() {
+      console.log('Sound has ended.');
+      isSoundPlaying = false;
+      currentlyPlayingSound = null;
     }
 
     // Function to scale the card to full screen
@@ -184,21 +196,19 @@
     };
   </script>
 
-<a-scene particle-system="preset: snow; particleCount: 15000; color:black, red; rotationAxis:y; positionSpread:0 1000 0; velocityValue: 0 5 0" loading-screen="dotsColor: red; backgroundColor: black" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true" antialias="true">
-
-
+  <a-scene particle-system="preset: snow; particleCount: 15000; color:black, red; rotationAxis:y; positionSpread:0 1000 0; velocityValue: 0 5 0" loading-screen="dotsColor: red; backgroundColor: black" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true" antialias="true">
     <a-camera position="0 -20 200" look-controls="pointerLockEnabled:true;" animation="property: position; to: 0 -0.7 0;  easing: linear; dur: 5000">
-      <a-entity 
+      <a-entity
         cursor="fuse: true; fuseTimeout: 1000"
         raycaster="objects: .gui-interactable"
         position="0 0 -0.8" scale="3 3 3">
-        <a-gui-cursor 
+        <a-gui-cursor
           id="cursor"
           color="red"
           hover-color="red"
           active-color="red"
           design="dot"
-	  fuse="false">
+          fuse="false">
         </a-gui-cursor>
       </a-entity>
     </a-camera>
